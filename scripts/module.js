@@ -1,7 +1,26 @@
+
+import { libWrapper } from './shim.js';
+
 Hooks.once('init', async function() {
+    libWrapper.register("hidden-tables", "RollTable.prototype.draw", updateMode, "WRAPPER")
 
 });
 
-Hooks.once('ready', async function() {
+Hooks.on("renderRollTableConfig", (config, html, css) => {
+    const isHidden = config.object.getFlag("hidden-tables", "hidden")
+    let lastBox = html.find(".results")
+    let checkboxHTML = `
+    <div class="form-group">
+        <label>${game.i18n.format("hidden-tables.tableText")}</label>
+        <input type="checkbox" name="flags.hidden-tables.hidden" ${isHidden ? "checked" : ""}>
+    </div>
+    `
+    lastBox.before(checkboxHTML)
+})
 
-});
+
+function updateMode(wrapped, ...args) {
+    debugger
+    if(this.getFlag("hidden-tables", "hidden")) args[0].rollMode = "gmroll";
+    return wrapped( ...args)
+}
