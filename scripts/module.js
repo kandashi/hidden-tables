@@ -20,7 +20,6 @@ Hooks.on("renderRollTableConfig", (config, html, css) => {
 
 
 function updateMode(wrapped, ...args) {
-    debugger
     if(this.getFlag("hidden-tables", "hidden")) args[0].rollMode = "gmroll";
     return wrapped( ...args)
 }
